@@ -8,23 +8,51 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     // declarations of buttons
-    Button buttonSimple,buttonSimpleList,buttonRadio;
+    Button buttonSimple,buttonSimpleList,buttonRadio,buttonCheck;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //assignment of buttons to layout elements
+        //assignment of buttons to layout elements and setting onClickListeners
         buttonSimple = (Button) findViewById(R.id.buttonSimple);
+        buttonSimple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createSimpleDialog();
+            }
+        });
         buttonSimpleList = (Button) findViewById(R.id.buttonSimpleList);
+        buttonSimpleList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createSimpleListDialog();
+            }
+        });
         buttonRadio  = (Button) findViewById(R.id.buttonListRadio);
+        buttonRadio.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                createListWithRadio();
+            }
+        });
+        buttonCheck = (Button) findViewById(R.id.buttonListCheckBox);
+        buttonCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createListWithCheckBox();
+            }
+        });
     }
 
 
 
-    public void createSimpleDialog(View v)
+    public void createSimpleDialog()
     {
         //creating builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -63,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void createSimpleListDialog(View v)
+    public void createSimpleListDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //array of options
@@ -112,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void createListWithRadio(View v)
+    public void createListWithRadio()
     {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String [] options = {"Yes","No","Cancel"};
@@ -156,5 +184,52 @@ public class MainActivity extends AppCompatActivity {
 
             AlertDialog dialog = builder.create();
             dialog.show();
+    }
+
+    public void createListWithCheckBox()
+    {
+        boolean[] mSelectedItems = new boolean[3];
+        mSelectedItems[0] = true;
+        mSelectedItems[1] = false;
+        mSelectedItems[2] = true;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final String [] options = {"Yes","No","Cancel"};
+        builder.setTitle("CheckBox dialog")
+                .setMultiChoiceItems(options,mSelectedItems, new DialogInterface.OnMultiChoiceClickListener(){
+        @Override
+        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            if (isChecked) {
+                Toast.makeText(MainActivity.this, "Check " + options[which], Toast.LENGTH_SHORT).show();
+            } else  {
+                Toast.makeText(MainActivity.this, "UnCheck " + options[which], Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(MainActivity.this, "CheckBox List dialog - Yes", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(MainActivity.this, "CheckBox List dialog  - No", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "CheckBox List dialog - Cancel", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
