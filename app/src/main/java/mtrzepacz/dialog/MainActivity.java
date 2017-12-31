@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,7 +16,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // declarations of buttons
-    Button buttonSimple,buttonSimpleList,buttonRadio,buttonCheck;
+    Button buttonSimple,buttonSimpleList,buttonRadio,buttonCheck,buttonCustomDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createListWithCheckBox();
+            }
+        });
+        buttonCustomDialog = (Button) findViewById(R.id.buttonCustom);
+        buttonCustomDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createCustomDialog();
             }
         });
     }
@@ -229,6 +239,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    public void createCustomDialog()
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final EditText username,password;
+        LayoutInflater layoutInflater = getLayoutInflater();
+        final View view = layoutInflater.inflate(R.layout.custom_dialog,null);
+        builder.setView(view);
+        username = (EditText) view.findViewById(R.id.username);
+        password = (EditText) view.findViewById(R.id.password);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            //overriding onClick for each one
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(MainActivity.this,  username.getText().toString() + " \n" + password.getText(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(MainActivity.this, "Wrong Password",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "Acces canceled",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
